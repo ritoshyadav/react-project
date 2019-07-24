@@ -1,48 +1,82 @@
-import React, { Component } from 'react';
+import React from "react";
+import { Formik } from "formik";
+import './Styles.css'
+// import * as EmailValidator from "email-validator";
+import Button from '../../components/UI/Button/Button';
+import * as Yup from "yup";
+import Aux from '../../hoc/Aux';
+const ValidatedLoginForm = () => (
+    <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+                console.log("Logging in", values);
+                setSubmitting(false);
+            }, 500);
+        }}
 
-class Login extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-          email: "",
-          password: ""
-        };
-      }
-      handleChange = event => {
-        this.setState({
-          [event.target.name]: event.target.value
-        });
-      };
-    
-      handleSubmit = event => {
-        console.log("Submitting");
-        console.log(this.state);
-      };
-    render(){
-        const { email, password } = this.state;
-        return(
-            <div>
-                <form onSubmit={this.handleSubmit}>
-        <label htmlFor="email">Email</label>
-        <input
-          name="email"
-          type="text"
-          placeholder="Enter your email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <label htmlFor="email">Password</label>
-        <input
-          name="password"
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={this.handleChange}
-        />
-        <button type="submit">Login</button>
-      </form>
-            </div>
-        )
-    }
-}
-export default Login;
+        validationSchema={Yup.object().shape({
+            email: Yup.string()
+                .email()
+                .required("Required"),
+            password: Yup.string()
+                .required("No password provided.")
+                .min(8, "Password is too short - should be 8 chars minimum.")
+                .matches(/(?=.*[0-9])/, "Password must contain a number.")
+        })}
+    >
+        {props => {
+            const {
+                values,
+                touched,
+                errors,
+                isSubmitting,
+                handleChange,
+                handleBlur,
+                handleSubmit
+            } = props;
+            return (
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                        name="email"
+                        type="text"
+                        placeholder="Enter your email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={errors.email && touched.email && "error"}
+                    />
+                    {errors.email && touched.email && (
+                        <div className="input-feedback">{errors.email}</div>
+                    )}
+                    <label htmlFor="email">Password</label>
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={errors.password && touched.password && "error"}
+                    />
+                    {errors.password && touched.password && (
+                        <div className="input-feedback">{errors.password}</div>
+                    )}
+                    <button type="submit" disabled={isSubmitting}>
+                        Login
+          </button>
+                    <button type="cancel" className="button-margin" >
+                        Cancel
+          </button>
+                    {/* <div style={{ color:red }}>
+                        <Button btnType="Success">Login</Button>
+                        <Button btnType="Danger">Cancel</Button>
+                    </div> */}
+                </form>
+            );
+        }}
+    </Formik>
+);
+
+export default ValidatedLoginForm;

@@ -1,0 +1,49 @@
+import React, { Component } from 'react';
+import Button from '../../components/UI/Button/Button';
+class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
+  handleSubmit = event => {
+    console.log("Submitting");
+    console.log(this.state);
+  };
+  render() {
+    const { email, password } = this.state;
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="email">Email</label>
+          <input
+            name="email"
+            type="text"
+            placeholder="Enter your email"
+            value={email}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="email">Password</label>
+          <input
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={this.handleChange}
+          />
+          <Button btnType="Success">Login</Button>
+          <Button btnType="Danger">Cancel</Button>
+        </form>
+      </div>
+    )
+  }
+}
+export default Login;

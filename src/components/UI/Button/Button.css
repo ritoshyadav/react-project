@@ -16,9 +16,11 @@
 }
 
 .Success {
-    color: #5C9210;
+    color: #f3f2f1;
+    background: #5C9210;
 }
 
 .Danger {
-    color: #944317;
+    color: #f3f2f1;
+     background: red;
 }
